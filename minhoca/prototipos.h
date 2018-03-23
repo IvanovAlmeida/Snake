@@ -12,9 +12,17 @@ void ponteiroNulo();
 
 void movimentar(char direcao);
 
+void baixo();
+
+void direita();
+
+void esquerda();
+
 void limparTela();
 
 void mostrarTabuleiro();
+
+void unsetMinhocaTabuleiro();
 
 void setMinhocaTabuleiro();
 

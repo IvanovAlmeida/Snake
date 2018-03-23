@@ -1,13 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <malloc.h>
 #include "contantes.h"
 #include "estruturas.h"
 #include "prototipos.h"
 
-#ifndef  __WIN32__
-    #include <ncurses.h>
-#else
-    #include <conio.h>
+#ifdef  __WIN32__
+#include <conio.h>
 #endif
 
 Doce *doce;
@@ -27,7 +27,7 @@ void inicializarConfiguracoes(){
     minhoca->tamanho = TAM_INICIAL_MINHOCA;
     minhoca->posicao = (Posicao *) malloc(sizeof(Posicao) * minhoca->tamanho);
 
-    for(int i = 0; i < minhoca->tamanho; i++)
+    for(int i = minhoca->tamanho-1; i >= 0; i--)
         setPosicao(minhoca->posicao + i, 0, i);
 
     doce = (Doce *) malloc(sizeof(Doce));
@@ -36,10 +36,56 @@ void inicializarConfiguracoes(){
 
 }
 
+#ifndef  __WIN32__
+
+void iniciarJogo(){
+    char tecla;
+
+    while(1){
+
+        limparTela();
+        mostrarTabuleiro();
+
+        tecla = getchar();
+
+        switch(tecla){
+            case 'w':
+            case 'W':
+                movimentar(CIMA);
+                break;
+            case 's':
+            case 'S':
+                movimentar(BAIXO);
+                break;
+            case 'a':
+            case 'A':
+                movimentar(ESQUERDA);
+                break;
+            case 'd':
+            case 'D':
+                movimentar(DIREITA);
+                break;
+            case 'q':
+            case 'Q':
+                endGame();
+                break;
+            default:
+                printf(MSG_TECLAS_PERMITIDAS);
+                break;
+        }
+
+        if(doce->vida == 0)
+            gerarDoce();
+
+         tecla = getchar();
+    }
+}
+
+#else
+
 void iniciarJogo(){
 
     char tecla;
-    int continuar = 1;
 
     while(!kbhit()){
 
@@ -67,7 +113,6 @@ void iniciarJogo(){
                 break;
             case 'q':
             case 'Q':
-                continuar = 0;
                 endGame();
                 break;
             default:
@@ -80,6 +125,8 @@ void iniciarJogo(){
     }
 }
 
+#endif
+
 void setPosicao(Posicao *posicao, int posX, int posY){
     *(tabuleiro + ( posX * TAM_MATRIZ ) + posY) = SIMBOLO;
     posicao->x = posX;
@@ -87,7 +134,7 @@ void setPosicao(Posicao *posicao, int posX, int posY){
 }
 
 void unsetPosicao(Posicao *posicao){
-    printf("%d %d\n", doce->posicao->x, doce->posicao->y);
+
     int posX = posicao->x;
     int posY = posicao->y;
 
@@ -116,17 +163,102 @@ void movimentar(char direcao){
         case CIMA:
             break;
         case BAIXO:
+            baixo();
             break;
         case ESQUERDA:
+            esquerda();
             break;
         case DIREITA:
+            direita();
             break;
     }
     doce->vida--;
 }
 
+void baixo(){
+
+    int x, y, a, b;
+    int tamanho = minhoca->tamanho;
+    //Posicao *aux = (Posicao *) malloc(sizeof(Posicao));
+
+    unsetMinhocaTabuleiro();
+
+    x = ( minhoca->posicao+tamanho-1 )->x;
+    y = ( minhoca->posicao+tamanho-1 )->y;
+
+    if( (x+1) < TAM_MATRIZ )
+        (minhoca->posicao+tamanho-1)->x += 1;
+    else
+        return;
+
+    for(int i = 0; i < tamanho-1; i++){
+
+        a = (minhoca->posicao+i)->x;
+        b = (minhoca->posicao+i)->y;
+
+        if( i == 0){
+            a = x;
+            b = y;
+        }
+
+        (minhoca->posicao+i)->x = a;
+        (minhoca->posicao+i)->y = b;
+
+
+    }
+
+    setMinhocaTabuleiro();
+
+    //free(aux);
+}
+
+void direita(){
+
+    int y, i;
+    int tamanho = minhoca->tamanho;
+
+    unsetMinhocaTabuleiro();
+
+    y = ( minhoca->posicao+tamanho-1 )->y;
+
+    for(i = 0; i < tamanho; i++){
+        if( !( y+1 < TAM_MATRIZ ) ) break;
+
+        (minhoca->posicao+i)->y += 1;
+    }
+
+    setMinhocaTabuleiro();
+}
+
+void esquerda(){
+
+    int y, i;
+    int tamanho = minhoca->tamanho;
+
+    unsetMinhocaTabuleiro();
+
+    y = ( minhoca->posicao+0 )->y;
+
+    for(i = 0; i < tamanho; i++){
+        if( !( y-1 >= 0 ) ) break;
+
+        (minhoca->posicao+i)->y -= 1;
+    }
+
+    setMinhocaTabuleiro();
+}
+
 void limparTela(){
-    system("@clear|cls");
+    system("@cls|clear");
+}
+
+void unsetMinhocaTabuleiro(){
+    int x, y;
+    for(int i = 0; i < minhoca->tamanho; i++){
+        x = (minhoca->posicao+i)->x;
+        y = (minhoca->posicao+i)->y;
+        *(tabuleiro + (x * TAM_MATRIZ) + y) = '-';
+    }
 }
 
 void setMinhocaTabuleiro(){
