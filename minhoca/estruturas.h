@@ -1,13 +1,13 @@
-typedef struct posicao{
+typedef struct {
     int x, y;
 } Posicao;
 
-typedef struct minhoca{
+typedef struct {
     int tamanho;
     Posicao *posicao;
 } Minhoca;
 
-typedef struct doce{
+typedef struct {
     int vida;
-    Posicao *posicao;
+    Posicao posicao;
 } Doce;

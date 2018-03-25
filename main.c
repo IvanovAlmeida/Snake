@@ -1,5 +1,5 @@
 
-#include "minhoca/minhoca.c"
+#include "minhoca/minhoca2.c"
 
 int main(){
 

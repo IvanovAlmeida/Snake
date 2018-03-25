@@ -2,28 +2,20 @@ void inicializarConfiguracoes();
 
 void iniciarJogo();
 
-void setPosicao(Posicao *posicao, int posX, int posY);
-
-void unsetPosicao(Posicao *posicao);
-
 void gerarDoce();
 
-void ponteiroNulo();
+int ponteiroNulo(Posicao *p);
 
-void movimentar(char direcao);
-
-void baixo();
-
-void direita();
-
-void esquerda();
+void movimentar(Posicao pos);
 
 void limparTela();
 
 void mostrarTabuleiro();
 
-void unsetMinhocaTabuleiro();
+void limpaTabuleiro();
 
-void setMinhocaTabuleiro();
+void setDoceTabuleiro(Posicao posicao);
+
+void setMinhocaTabuleiro(Posicao *posicao, int tamanho);
 
 void endGame();

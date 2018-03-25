@@ -6,8 +6,12 @@
 #include "estruturas.h"
 #include "prototipos.h"
 
-#ifdef  __WIN32__
-#include <conio.h>
+#ifndef __WIN32__
+    #include <termios.h>
+    #include <unistd.h>
+    #include "getch.c"
+#else
+    #include <conio.h>
 #endif
 
 Doce *doce;
@@ -36,58 +40,10 @@ void inicializarConfiguracoes(){
 
 }
 
-#ifndef  __WIN32__
-
 void iniciarJogo(){
     char tecla;
 
     while(1){
-
-        limparTela();
-        mostrarTabuleiro();
-
-        tecla = getchar();
-
-        switch(tecla){
-            case 'w':
-            case 'W':
-                movimentar(CIMA);
-                break;
-            case 's':
-            case 'S':
-                movimentar(BAIXO);
-                break;
-            case 'a':
-            case 'A':
-                movimentar(ESQUERDA);
-                break;
-            case 'd':
-            case 'D':
-                movimentar(DIREITA);
-                break;
-            case 'q':
-            case 'Q':
-                endGame();
-                break;
-            default:
-                printf(MSG_TECLAS_PERMITIDAS);
-                break;
-        }
-
-        if(doce->vida == 0)
-            gerarDoce();
-
-         tecla = getchar();
-    }
-}
-
-#else
-
-void iniciarJogo(){
-
-    char tecla;
-
-    while(!kbhit()){
 
         limparTela();
         mostrarTabuleiro();
@@ -122,10 +78,9 @@ void iniciarJogo(){
 
         if(doce->vida == 0)
             gerarDoce();
+
     }
 }
-
-#endif
 
 void setPosicao(Posicao *posicao, int posX, int posY){
     *(tabuleiro + ( posX * TAM_MATRIZ ) + posY) = SIMBOLO;
