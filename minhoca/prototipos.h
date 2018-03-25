@@ -18,4 +18,4 @@ void setDoceTabuleiro(Posicao posicao);
 
 void setMinhocaTabuleiro(Posicao *posicao, int tamanho);
 
-void endGame();
+void endGame(int option);

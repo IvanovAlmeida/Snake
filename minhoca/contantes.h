@@ -29,3 +29,13 @@
 #define ESQUERDA    'a'
 #define CIMA        'w'
 #define BAIXO       's'
+
+/** END GAME **/
+#define GAME_WIN 0
+#define GAME_WIN_MSG "Parabêns, você venceu.!\n"
+#define GAME_LOSE_1 1
+#define GAME_LOSE_MSG_1 "Fim de jogo! Você perdeu!\nNa próxima tente não bater em si mesmo ;-)\n"
+#define GAME_LOSE_2 2
+#define GAME_LOSE_MSG_2 "Fim de jogo! Você perdeu!\nNa próxima tente não bater nas paredes ;-)\n"
+#define GAME_EXIT 3
+#define GAME_EXIT_MSG "Encerrando jogo.\n"

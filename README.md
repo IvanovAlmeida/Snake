@@ -1,12 +1,22 @@
-Compilar no windows:
+Inclua a lib minhoca.c
 
-``` gcc main.c -o main ```
+````objectivec
+#include "minhoca/minhoca.c"
+````
 
-Compilar no linux:
+Inicialize as configurações na função main
 
-``` gcc main.c -o main -lncurses ```
+````objectivec
+void main(void){
+    inicializarConfiguracoes();
+    
+    iniciarJogo();
+}
+````
 
-Obs: No linux é preciso ter a libncurses5-dev. 
-Para instalar:
 
-``` sudo apt-get install libncurses5-dev ```
+Compilar:
+
+````commandline
+gcc main.c -o main
+````

@@ -1,11 +1,10 @@
 
-#include "minhoca/minhoca2.c"
+#include "minhoca/minhoca.c"
 
-int main(){
+void main(){
 
     inicializarConfiguracoes();
 
     iniciarJogo();
 
-    return 0;
 }
