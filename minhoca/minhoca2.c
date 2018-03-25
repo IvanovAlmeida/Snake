@@ -107,15 +107,7 @@ void movimentar(Posicao pos){
 
     int i;
 
-    system("pause");
-
-    printf("%d\n", minhoca.tamanho);
-
-    system("pause");
-
     minhoca.posicao = (Posicao *) realloc(minhoca.posicao, sizeof(Posicao) * minhoca.tamanho);
-
-
 
     for(i = minhoca.tamanho - 1; i >= 0 ; i--) {
         if( i == 0 ){
@@ -135,7 +127,7 @@ void movimentar(Posicao pos){
         endGame();
 
     if(pos.x == doce.posicao.x && pos.y == doce.posicao.y){
-        minhoca.tamanho++;
+        minhoca.tamanho += 1;
         gerarDoce();
     }
 

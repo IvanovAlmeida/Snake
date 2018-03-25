@@ -12,15 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ee18b4f-73a0-405c-b139-e7a8486e92b3" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/minhoca/minhoca2.c" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/main" afterPath="$PROJECT_DIR$/main" />
-      <change beforePath="$PROJECT_DIR$/main.c" afterPath="$PROJECT_DIR$/main.c" />
-      <change beforePath="$PROJECT_DIR$/main.exe" afterPath="$PROJECT_DIR$/main.exe" />
-      <change beforePath="$PROJECT_DIR$/minhoca/contantes.h" afterPath="$PROJECT_DIR$/minhoca/contantes.h" />
-      <change beforePath="$PROJECT_DIR$/minhoca/estruturas.h" afterPath="$PROJECT_DIR$/minhoca/estruturas.h" />
-      <change beforePath="$PROJECT_DIR$/minhoca/minhoca.c" afterPath="$PROJECT_DIR$/minhoca/minhoca.c" />
-      <change beforePath="$PROJECT_DIR$/minhoca/prototipos.h" afterPath="$PROJECT_DIR$/minhoca/prototipos.h" />
+      <change beforePath="$PROJECT_DIR$/minhoca/minhoca2.c" afterPath="$PROJECT_DIR$/minhoca/minhoca2.c" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -78,8 +70,8 @@
           <file leaf-file-name="minhoca2.c" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/minhoca/minhoca2.c">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="238">
-                  <caret line="113" column="20" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
+                <state relative-caret-position="459">
+                  <caret line="129" column="28" lean-forward="false" selection-start-line="129" selection-start-column="28" selection-end-line="129" selection-end-column="28" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
                     <element signature="e#191#295#0" expanded="true" />
@@ -243,12 +235,12 @@
       <workItem from="1521485614557" duration="5031000" />
       <workItem from="1521589860899" duration="216000" />
       <workItem from="1521808201661" duration="9409000" />
-      <workItem from="1521942172636" duration="11825000" />
+      <workItem from="1521942172636" duration="12006000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40631000" />
+    <option name="totallyTimeSpent" value="40812000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="886" extended-state="6" />
@@ -686,8 +678,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/minhoca/minhoca2.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="113" column="20" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
+        <state relative-caret-position="459">
+          <caret line="129" column="28" lean-forward="false" selection-start-line="129" selection-start-column="28" selection-end-line="129" selection-end-column="28" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <element signature="e#191#295#0" expanded="true" />
