@@ -1,5 +1,9 @@
 void inicializarConfiguracoes();
 
+int abrirArquivo();
+
+int criaArquivo();
+
 void iniciarJogo();
 
 void gerarDoce();

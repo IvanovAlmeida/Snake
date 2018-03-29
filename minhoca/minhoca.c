@@ -45,6 +45,7 @@
 Doce doce;
 Minhoca minhoca;
 char tabuleiro[TAM_MATRIZ][TAM_MATRIZ];
+FILE *saveFile;
 
 /**
  * @fn inicializarConfiguracoes()
@@ -52,9 +53,23 @@ char tabuleiro[TAM_MATRIZ][TAM_MATRIZ];
  */
 void inicializarConfiguracoes(){
 
+    printf(LIGHT_MAGENTA "\nInicializando configurações...\n");
+
     srand((unsigned) time(NULL));
 
+    /** Se o arquivo não existir é chamado uma função para cria-lo. **/
+    if( !abrirArquivo() ) {
+        if( !criaArquivo() ) {
+            printf( RED "Não foi possivel criar o arquivo. Encerrando execução.\n");
+            exit(1);
+        } else if( !abrirArquivo() ){
+            printf( RED "Não foi possivel abrir o arquivo. Encerrando execução.\n");
+            exit(1);
+        }
+    }
+
     minhoca.tamanho = TAM_INICIAL_MINHOCA;
+
     while(ponteiroNulo(minhoca.posicao))
         minhoca.posicao = (Posicao *) malloc(sizeof(Posicao) * minhoca.tamanho);
 
@@ -65,6 +80,23 @@ void inicializarConfiguracoes(){
 
     gerarDoce();
 
+}
+
+int abrirArquivo(){
+    if( !( saveFile = fopen(FILENAME, "r+") ) )
+        return 0;
+    return 1;
+}
+
+int criaArquivo(){
+    if(! (saveFile = fopen(FILENAME, "a") )){
+        fclose(saveFile);
+        saveFile = NULL;
+        return 0;
+    }
+    fclose(saveFile);
+    saveFile = NULL;
+    return 1;
 }
 
 /**
@@ -114,6 +146,11 @@ void iniciarJogo(){
                 case SAIR_2:
                     endGame(GAME_EXIT);
                     break;
+            }
+
+            if(novaPosicao.x == doce.posicao.x && novaPosicao.y == doce.posicao.y){
+                minhoca.tamanho++;
+                gerarDoce();
             }
 
             movimentar(novaPosicao);
@@ -182,11 +219,6 @@ void movimentar(Posicao pos){
 
     int i;
 
-    if(minhoca.posicao[0].x == doce.posicao.x && minhoca.posicao[0].y == doce.posicao.y){
-        minhoca.tamanho = minhoca.tamanho+1;
-        gerarDoce();
-    }
-
     minhoca.posicao = (Posicao *) realloc(minhoca.posicao, sizeof(Posicao) * minhoca.tamanho);
 
     for(i = minhoca.tamanho - 1; i >= 0 ; i--) {
@@ -200,7 +232,8 @@ void movimentar(Posicao pos){
     }
 
     for(i = 1; i < minhoca.tamanho; i++)
-        if(minhoca.posicao[0].x == minhoca.posicao[i].x && minhoca.posicao[0].y == minhoca.posicao[i].y)
+        if(minhoca.posicao[0].x == minhoca.posicao[i].x &&
+           minhoca.posicao[0].y == minhoca.posicao[i].y)
             endGame(GAME_LOSE_1);
 
     if( minhoca.posicao[0].x < 0 || minhoca.posicao[0].x > 9 ||
@@ -235,19 +268,22 @@ void mostrarTabuleiro(){
     setDoceTabuleiro(doce.posicao);
     setMinhocaTabuleiro(minhoca.posicao, minhoca.tamanho);
 
+    printf(GREEN "Faltam " RED "%d" GREEN " doces para ganhar!\n" WHITE, TAM_MAX_MINHOCA - minhoca.tamanho);
+    printf(GREEN "Voce tem " RED "%d" GREEN " movimentos.\n\n", doce.vida);
+
     for (i = 0; i < TAM_MATRIZ; i++) {
         for (int j = 0; j < TAM_MATRIZ; j++) {
 
             if(j == 0)
-                printf(COR_PAREDES "|" CL_RESET);
+                printf(COR_PAREDES "|" WHITE);
             if(tabuleiro[i][j] == 'd')
-                printf(COR_DOCE " %c " CL_RESET, DOCE);
+                printf(COR_DOCE " %c " WHITE, DOCE);
             else if(tabuleiro[i][j] == 'm')
-                printf(COR_MINHOCA " %c " CL_RESET, MINHOCA);
+                printf(COR_MINHOCA " %c " WHITE, MINHOCA);
             else
                 printf("   ");
             if(j == TAM_MATRIZ-1)
-                printf(COR_PAREDES "|\n" CL_RESET);
+                printf(COR_PAREDES "|\n" WHITE);
         }
     }
     printf("\n");
@@ -271,15 +307,19 @@ void setMinhocaTabuleiro(Posicao *posicao, int tamanho){
 void endGame(int option){
 
     if(option == GAME_WIN)
-        printf( CL_GREEN "%s" CL_RESET, GAME_WIN_MSG);
+        printf( GREEN "%s" WHITE, GAME_WIN_MSG);
     else if(option == GAME_LOSE_1)
-        printf( CL_RED "%s" CL_RESET, GAME_LOSE_MSG_1);
+        printf( RED "%s" WHITE, GAME_LOSE_MSG_1);
     else if(option == GAME_LOSE_2)
-        printf( CL_RED "%s" CL_RESET, GAME_LOSE_MSG_2);
+        printf( RED "%s" WHITE, GAME_LOSE_MSG_2);
     else if(option == GAME_EXIT)
-        printf( CL_CYAN "%s" CL_RESET, GAME_EXIT_MSG);
+        printf( CYAN "%s" WHITE, GAME_EXIT_MSG);
 
     free(minhoca.posicao);
+    fclose(saveFile);
+
+    minhoca.posicao = NULL;
+    saveFile = NULL;
 
     exit(1);
 }
