@@ -1,51 +1,17 @@
-/**
- * Verifica se as bibliotecas básicas para o funcionamento
- * estão importadas, se não, para a compilação e exibe um erro.
- */
-#ifndef _STDIO_H
-    #error Inclua a biblioteca <stdio.h>
-#endif
-#ifndef _STDLIB_H
-    #error Inclua a biblioteca <stdlib.h>
-#endif
-#ifndef _TIME_H
-    #error Inclua a biblioteca <time.h>
-#endif
-#ifndef _MALLOC_H_
-#ifdef __WIN32__
-    #error Inclua a biblioteca <malloc.h>
-#endif
-#endif
-
-/**
- * Verifica se o sistema é windows ou linux.
- * Se for linux exibe um warning avisando para qual sistema está compilando,
- * e importa as bibliotecas necessarias para o sistema em questão.
- */
-#ifndef __WIN32__
-    #warning "Compilando para linux!"
-    #include <termios.h>
-    #include <unistd.h>
-    #include "getch.c"
-#else
-    #warning "Compilando para windows!"
-    #include <conio.h>
-#endif
-
-/**
- * Importa os arquivos do projeto.
- */
-#include "contantes.h"
-#include "estruturas.h"
-#include "prototipos.h"
+#include "includes.c"
 
 /**
  * Variaveis globais
  */
-Doce doce;
-Minhoca minhoca;
-char tabuleiro[TAM_MATRIZ][TAM_MATRIZ];
-FILE *saveFile;
+
+Doce doce;                              /** Doce **/
+Minhoca minhoca;                        /** Minhoca **/
+
+Jogo *jogo;                             /** Variavel para salvar todos os dados do jogo **/
+FILE *saveFile;                         /** Arquivo para salvar o jogo **/
+int posicaoSave;                        /** Guarda o valor para posicionar o ponteiro do arquivo **/
+char jogador[50];                       /** Nome do jogador **/
+char tabuleiro[TAM_MATRIZ][TAM_MATRIZ]; /** Tabuleiro do Jogo **/
 
 /**
  * @fn inicializarConfiguracoes()
@@ -99,11 +65,160 @@ int criaArquivo(){
     return 1;
 }
 
+void showLogo(){
+    printf("\n" LIGHT_BLUE);
+    printf("=========================================================================================\n");
+    printf("=                                                                                       =\n");
+    printf("=    ***********  *******      *****    **********    *****     *****  ***************  =\n");
+    printf("=   ***********   ********     *****   ************   *****    *****   ***************  =\n");
+    printf("=  ******         *********    *****  *****    *****  *****   *****    *****            =\n");
+    printf("=  ******         **********   *****  *****    *****  *****  *****     *****            =\n");
+    printf("=   **********    ***** *****  *****  **************  ***********      ***********      =\n");
+    printf("=    **********   *****  ***** *****  **************  ***********      ***********      =\n");
+    printf("=         ******  *****   **********  *****    *****  *****  *****     *****            =\n");
+    printf("=         ******  *****    *********  *****    *****  *****   *****    *****            =\n");
+    printf("=   ***********   *****     ********  *****    *****  *****    *****   ***************  =\n");
+    printf("=  ***********    *****      *******  *****    *****  *****     *****  ***************  =\n");
+    printf("=                                                                                       =\n");
+    printf("=========================================================================================\n");
+    printf("\n" WHITE);
+}
+
+void carregarJogo(){
+
+    char tecla;
+    int i, menu = 0;
+
+    jogo = (Jogo *) malloc(sizeof(Jogo));
+
+    while(1){
+        limparTela();
+        showLogo();
+
+        if(menu == 0){
+
+            printf(" Escolha uma das opções: \n");
+            printf(" N - Novo jogo \n");
+            printf(" C - Continuar \n");
+            printf(" Q - Sair \n\n");
+            printf("=> ");
+
+            tecla = getchar();
+            getchar();
+            menu = 1;
+
+        }else if(menu == 1){
+
+            if(tecla == 'N' || tecla == 'n'){
+
+                int jogadorExiste = 0;
+
+                printf("Novo jogo. Para voltar ao menu principal deixe o nome vazio.\n");
+                printf("Nome do jogador: ");
+                gets(jogador);
+
+                if(strcmp(jogador, "") == 0){
+                    menu = 0;
+                    continue;
+                }
+
+                i = 0;
+                fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);
+                while( fread(jogo, sizeof(Jogo), 1, saveFile)  ){
+                    if( strcmp(jogador, jogo->jogador) == 0 ){
+                        jogadorExiste = 1;
+                        printf("Esse nome de jogador já existe. Por favor escolha um novo nome.\n");
+                        pausar();
+                        break;
+                    }
+                    i++;
+                    fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);
+                }
+                if(jogadorExiste)
+                    continue;
+                else{
+                    posicaoSave = i;
+                    salvarJogo();
+                    break;
+                }
+
+            } else if(tecla == 'C' || tecla == 'c'){
+
+                int jogadorExiste = 0;
+
+                printf("Continuar um jogo. Para voltar ao menu principal deixe o nome vazio.\n");
+                printf("Nome do jogador: ");
+                gets(jogador);
+
+                if(strcmp(jogador, "") == 0){
+                    menu = 0;
+                    continue;
+                }
+
+                i = 0;
+                fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);
+                while( fread(jogo, sizeof(Jogo), 1, saveFile) ){
+
+                    if( strcmp(jogador, jogo->jogador) == 0 ){
+                        jogadorExiste = 1;
+
+                        doce.vida = jogo->doce.vida;
+                        doce.posicao.x = jogo->doce.posicao.x;
+                        doce.posicao.y = jogo->doce.posicao.y;
+
+                        minhoca.tamanho = jogo->tamanho_minhoca;
+                        minhoca.posicao = (Posicao *) realloc(minhoca.posicao, sizeof(Posicao) * minhoca.tamanho);
+
+                        for(int k = 0; k < minhoca.tamanho; k++){
+                            minhoca.posicao[k].x = jogo->minhoca[k].x;
+                            minhoca.posicao[k].y = jogo->minhoca[k].y;
+                        }
+                        posicaoSave = i;
+
+                        break;
+                    }
+
+
+                    i++;
+                    fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);
+                }
+
+                if(!jogadorExiste){
+                    printf("Jogador não encontrado! Tente novamente.\n");
+                    pausar();
+                }else
+                    break;
+
+            } else if(tecla == 'Q' || tecla == 'q'){
+
+                endGame(GAME_EXIT);
+
+            } else {
+
+                printf("Opção inválida! \nDigite aperte qualquer tecla para continuar.\n");
+                menu = 0;
+                getchar();
+
+            }
+        }
+
+    }
+
+    if(jogo != NULL){
+        free(jogo);
+        jogo = NULL;
+    }
+}
+
 /**
  * @fn iniciarJogo()
  * @brief Função principal do jogo.
  */
 void iniciarJogo(){
+
+    limparTela();
+
+    carregarJogo();
 
     char tecla;
     Posicao novaPosicao = minhoca.posicao[0];
@@ -164,12 +279,48 @@ void iniciarJogo(){
             limparTela();
             mostrarTabuleiro();
 
-        }else{
+        } else if( tecla == SAVE_1 || tecla == SAVE_2 ) {
+
+            salvarJogo();
+            printf("Jogo salvo com sucesso!\n");
+
+        } else {
             limparTela();
             mostrarTabuleiro();
-            printf(MSG_TECLAS_PERMITIDAS);
+            mostrarTeclasPermitidas();
         }
 
+    }
+}
+
+void pausar(){
+    printf("Aperte qualquer tecla para continuar...\n");
+    getchar();
+}
+
+void salvarJogo(int novoJogo){
+    int i = 0;
+
+    jogo = (Jogo *) malloc(sizeof(Jogo));
+
+    strcpy(jogo->jogador, jogador);
+
+    jogo->doce.vida = doce.vida;
+    jogo->doce.posicao.x = doce.posicao.x;
+    jogo->doce.posicao.y = doce.posicao.y;
+    jogo->tamanho_minhoca = minhoca.tamanho;
+
+    for(i = 0; i < minhoca.tamanho; i++){
+        jogo->minhoca[i].x = minhoca.posicao[i].x;
+        jogo->minhoca[i].y = minhoca.posicao[i].y;
+    }
+
+    fseek(saveFile, sizeof(Jogo) * posicaoSave, SEEK_SET);
+    fwrite(jogo, sizeof(Jogo), 1, saveFile);
+
+    if(jogo != NULL){
+        free(jogo);
+        jogo = NULL;
     }
 }
 
@@ -268,8 +419,8 @@ void mostrarTabuleiro(){
     setDoceTabuleiro(doce.posicao);
     setMinhocaTabuleiro(minhoca.posicao, minhoca.tamanho);
 
-    printf(GREEN "Faltam " RED "%d" GREEN " doces para ganhar!\n" WHITE, TAM_MAX_MINHOCA - minhoca.tamanho);
-    printf(GREEN "Voce tem " RED "%d" GREEN " movimentos.\n\n", doce.vida);
+    //printf(LIGHT_GREEN "Faltam " LIGHT_RED "%d" LIGHT_GREEN " doces para ganhar!\n" WHITE, TAM_MAX_MINHOCA - minhoca.tamanho);
+    printf(LIGHT_GREEN "\nVoce ainda possui " LIGHT_RED "%d" LIGHT_GREEN " movimentos.\n\n", doce.vida);
 
     for (i = 0; i < TAM_MATRIZ; i++) {
         for (int j = 0; j < TAM_MATRIZ; j++) {
@@ -304,22 +455,39 @@ void setMinhocaTabuleiro(Posicao *posicao, int tamanho){
         tabuleiro[posicao[i].x][posicao[i].y] = COD_MINHOCA;
 }
 
+void mostrarTeclasPermitidas(){
+
+    printf(LIGHT_RED "Teclas permitidas: \n\n");
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Cima \n", CIMA_1, CIMA_2);
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Baixo \n", BAIXO_1, BAIXO_2);
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Esquerda \n", ESQUERDA_1, ESQUERDA_2);
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Direita \n", DIREITA_1, DIREITA_2);
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Salvar jogo\n", SAVE_1, SAVE_2);
+    printf(LIGHT_RED "[ %c | %c ] "LIGHT_CYAN" Sair\n\n", SAIR_1, SAIR_2);
+
+}
+
 void endGame(int option){
 
     if(option == GAME_WIN)
-        printf( GREEN "%s" WHITE, GAME_WIN_MSG);
+        printf( LIGHT_GREEN "%s" WHITE, GAME_WIN_MSG);
     else if(option == GAME_LOSE_1)
-        printf( RED "%s" WHITE, GAME_LOSE_MSG_1);
+        printf( LIGHT_RED "%s" WHITE, GAME_LOSE_MSG_1);
     else if(option == GAME_LOSE_2)
-        printf( RED "%s" WHITE, GAME_LOSE_MSG_2);
+        printf( LIGHT_RED "%s" WHITE, GAME_LOSE_MSG_2);
     else if(option == GAME_EXIT)
-        printf( CYAN "%s" WHITE, GAME_EXIT_MSG);
+        printf( LIGHT_CYAN "%s" WHITE, GAME_EXIT_MSG);
 
     free(minhoca.posicao);
     fclose(saveFile);
 
     minhoca.posicao = NULL;
     saveFile = NULL;
+
+    if(jogo != NULL){
+        free(jogo);
+        jogo = NULL;
+    }
 
     exit(1);
 }

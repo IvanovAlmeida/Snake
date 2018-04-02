@@ -1,25 +1,35 @@
+void limparTela();
+
 void inicializarConfiguracoes();
+
+int ponteiroNulo(Posicao *p);
 
 int abrirArquivo();
 
 int criaArquivo();
 
+void showLogo();
+
+void carregarJogo();
+
 void iniciarJogo();
 
 void gerarDoce();
 
-int ponteiroNulo(Posicao *p);
+void mostrarTeclasPermitidas();
 
-void movimentar(Posicao pos);
-
-void limparTela();
+void limpaTabuleiro();
 
 void mostrarTabuleiro();
 
-void limpaTabuleiro();
+void movimentar(Posicao pos);
 
 void setDoceTabuleiro(Posicao posicao);
 
 void setMinhocaTabuleiro(Posicao *posicao, int tamanho);
+
+void salvarJogo();
+
+void pausar();
 
 void endGame(int option);

@@ -4,34 +4,10 @@
  */
 
 #define TAM_MATRIZ          10             /** Tamanho da matrix será 10x10 **/
-#define TAM_INICIAL_MINHOCA 2              /** Tamanho inicial da minhoca **/
+#define TAM_INICIAL_MINHOCA 3              /** Tamanho inicial da minhoca **/
 #define TAM_MAX_MINHOCA     50             /** Tamanho maximo da minhoca será 100 **/
 #define vida_doce(doce, minhoca) abs(doce.x - minhoca.x) + abs(doce.y - minhoca.y) + 1 /** Vida do doce **/
 #define FILENAME            "game.save"    /** Arquivo onde será salvo o progresso do jogo **/
-
-/**
- * Teclas Permitidas
- **/
-#define DIREITA_1     'd'
-#define DIREITA_2     'D'
-#define ESQUERDA_1    'a'
-#define ESQUERDA_2    'A'
-#define CIMA_1        'w'
-#define CIMA_2        'W'
-#define BAIXO_1       's'
-#define BAIXO_2       'S'
-#define SAIR_1        'q'
-#define SAIR_2        'Q'
-
-/**
- * Mensagem de teclas
- **/
-#define MSG_TECLAS_PERMITIDAS   "\nTeclas permitidas: \n\
-w | W - Cima \n\
-s | S - Baixo \n\
-a | A - Esquerda \n\
-d | D - Direita \n\
-q | Q - Sair\n\n"
 
 /**
  * Cores
@@ -53,15 +29,31 @@ q | Q - Sair\n\n"
 #define LIGHT_CYAN      "\033[01;36m"
 #define WHITE           "\033[01;37m"
 
+/**
+ * Teclas Permitidas
+ **/
+#define DIREITA_1     'd'
+#define DIREITA_2     'D'
+#define ESQUERDA_1    'a'
+#define ESQUERDA_2    'A'
+#define CIMA_1        'w'
+#define CIMA_2        'W'
+#define BAIXO_1       's'
+#define BAIXO_2       'S'
+#define SAVE_1        'r'
+#define SAVE_2        'R'
+#define SAIR_1        'q'
+#define SAIR_2        'Q'
+
 #define DOCE 'o'             /** Simbolo para o doce no jogo **/
 #define COD_DOCE 'd'         /** Código que representa o doce na matriz **/
-#define COR_DOCE RED         /** Cor do doce no tabuleiro **/
+#define COR_DOCE LIGHT_RED         /** Cor do doce no tabuleiro **/
 
 #define MINHOCA 'o'         /** Simbolo para a minhoca no jogo **/
 #define COD_MINHOCA 'm'     /** Código que representa a minhoca na matriz **/
-#define COR_MINHOCA CYAN    /** Cor da minhoca no tabuleiro **/
+#define COR_MINHOCA LIGHT_CYAN    /** Cor da minhoca no tabuleiro **/
 
-#define COR_PAREDES BLUE /** Cor das paredes no tabuleiro **/
+#define COR_PAREDES LIGHT_BLUE /** Cor das paredes no tabuleiro **/
 
 /**
  * Códigos e mensagens para cada
