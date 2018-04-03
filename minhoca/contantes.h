@@ -7,7 +7,7 @@
 #define TAM_INICIAL_MINHOCA 3              /** Tamanho inicial da minhoca **/
 #define TAM_MAX_MINHOCA     50             /** Tamanho maximo da minhoca será 100 **/
 #define vida_doce(doce, minhoca) abs(doce.x - minhoca.x) + abs(doce.y - minhoca.y) + 1 /** Vida do doce **/
-#define FILENAME            "game.save"    /** Arquivo onde será salvo o progresso do jogo **/
+#define FILENAME            "minhoca.save" /** Arquivo onde será salvo o progresso do jogo **/
 
 /**
  * Cores

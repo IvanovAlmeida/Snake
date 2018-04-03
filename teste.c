@@ -16,7 +16,7 @@ typedef struct { char jogador[50]; Doce doce; int tamanho_minhoca; Posicao minho
 
 int main(){
 
-    FILE *file = fopen("game.save", "r+");
+    FILE *file = fopen("game.txt", "r+");
 
     Minhoca minhoca;
     Doce doce;
