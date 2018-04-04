@@ -34,4 +34,4 @@ void setDoceTabuleiro(Posicao posicao);
 
 void setMinhocaTabuleiro(Posicao *posicao, int tamanho);
 
-void endGame(int option);
+void fimDeJogo(int option);

@@ -227,12 +227,15 @@ void menuInicial(){
                 printf( CYAN " Jogadores salvos: \n");
                 i = 0;                                                          /** Variavel usada para posicionar o ponteiro em cada indice do arquivo     **/
                 fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);                    /** Posiciona o ponteiro do arquivo no indice indicado por i                **/
-                while( fread(jogo, sizeof(Jogo), 1, saveFile) ){                /** Le o arquivo                                                            **/
+                while( fread(jogo, sizeof(Jogo), 1, saveFile)  ){               /** Le o arquivo                                                            **/
                     printf( CYAN " [ " MAGENTA " %d " CYAN " ] %s\n", (i+1), jogo->jogador);    /** Printa o nome do jogador e um indice                    **/
 
                     i++;                                                        /** Incrementa i                                                            **/
                     fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);                /** Reposiciona o ponteiro                                                  **/
                 }
+
+                //fread(jogo, sizeof(Jogo), 1, saveFile);
+                //printf( CYAN " [ " MAGENTA " %d " CYAN " ] %s\n", (i+1), jogo->jogador);
 
                 printf( CYAN "\n Selecione um indice. Para voltar digite " RED "0" CYAN ".\n");
                 printf( CYAN " => " MAGENTA);
