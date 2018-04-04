@@ -175,7 +175,7 @@ void menuInicial(){
         limparTela();
         mostrarLogo();
 
-        if(menu == 0){ /** Primeiro menu **/
+        if(!menu){ /** Primeiro menu **/
 
             printf( CYAN " Escolha uma das opções: \n");
             printf( MAGENTA " N " CYAN "- Novo jogo \n");
@@ -187,7 +187,7 @@ void menuInicial(){
             getchar();
             menu = 1;
 
-        }else if(menu == 1){ /** Segundo menu **/
+        }else if(menu){ /** Segundo menu **/
 
             if(tecla == 'N' || tecla == 'n'){                           /** Parte do segundo menu responsavel por criar o novo jogo                 **/
 
@@ -214,24 +214,24 @@ void menuInicial(){
                     i++;
                     fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);
                 }
-                if(jogadorExiste)                                       /** Verifica a flag, se jogadorExiste = 1 volta ao inicio do menu de criação do novo jogo  **/
+                if(jogadorExiste)                                               /** Verifica a flag, se jogadorExiste = 1 volta ao inicio do menu de criação do novo jogo  **/
                     continue;
                 else{
-                    posicaoSave = i;                                    /** Se não, salva a posição do indice em posicaoSave - indicado por i -, salva o jogo inicialmente e sai do while **/
+                    posicaoSave = i;                                            /** Se não, salva a posição do indice em posicaoSave - indicado por i -, salva o jogo inicialmente e sai do while **/
                     salvarJogo();
                     break;
                 }
 
-            } else if(tecla == 'C' || tecla == 'c'){                    /** Parte do segundo menu responsavel por carregar o jogo existente         **/
-                int op;                                                 /** Variavel que salva o indice a ser carregado                             **/
+            } else if(tecla == 'C' || tecla == 'c'){                            /** Parte do segundo menu responsavel por carregar o jogo existente         **/
+                int op;                                                         /** Variavel que salva o indice a ser carregado                             **/
                 printf( CYAN " Jogadores salvos: \n");
-                i = 0;                                                  /** Variavel usada para posicionar o ponteiro em cada indice do arquivo     **/
-                fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);            /** Posiciona o ponteiro do arquivo no indice indicado por i                **/
-                while( fread(jogo, sizeof(Jogo), 1, saveFile) ){        /** Le o arquivo                                                            **/
-                    printf( CYAN " [ " MAGENTA " %d " CYAN " ] %s\n", (i+1), jogo->jogador);        /** Printa o nome do jogador e um indice                                    **/
+                i = 0;                                                          /** Variavel usada para posicionar o ponteiro em cada indice do arquivo     **/
+                fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);                    /** Posiciona o ponteiro do arquivo no indice indicado por i                **/
+                while( fread(jogo, sizeof(Jogo), 1, saveFile) ){                /** Le o arquivo                                                            **/
+                    printf( CYAN " [ " MAGENTA " %d " CYAN " ] %s\n", (i+1), jogo->jogador);    /** Printa o nome do jogador e um indice                    **/
 
-                    i++;                                                /** Incrementa i                                                            **/
-                    fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);        /** Reposiciona o ponteiro                                                  **/
+                    i++;                                                        /** Incrementa i                                                            **/
+                    fseek(saveFile, sizeof(Jogo) * i, SEEK_SET);                /** Reposiciona o ponteiro                                                  **/
                 }
 
                 printf( CYAN "\n Selecione um indice. Para voltar digite " RED "0" CYAN ".\n");
@@ -239,26 +239,26 @@ void menuInicial(){
                 scanf(" %d", &op);
                 getchar();
 
-                if(op == 0){                                            /** Se op for igual a 0 volta ao primeiro menu                              **/
+                if(op == 0){                                                    /** Se op for igual a 0 volta ao primeiro menu                              **/
                     menu = 0;
                     continue;
                 }
                 op--;
 
-                if(op >= 0 && op <= i){                                 /** Se op for maior e igual a zero e menor igual a i(que contem o último indice) a opção escolhida é válida**/
+                if(op >= 0 && op <= i){                                         /** Se op for maior e igual a zero e menor igual a i(que contem o último indice) a opção escolhida é válida**/
 
-                    posicaoSave = op;                                   /** Guarda a posicao                                                        **/
-                    carregarJogo();                                     /** Carrega o jogo                                                          **/
-                    break;                                              /** Sai do while                                                            **/
+                    posicaoSave = op;                                           /** Guarda a posicao                                                        **/
+                    carregarJogo();                                             /** Carrega o jogo                                                          **/
+                    break;                                                      /** Sai do while                                                            **/
 
                 } else {
                     printf("Indice inválido. Tente novamente.\n");
                     pausar();
                 }
 
-            } else if(tecla == 'Q' || tecla == 'q'){                    /** Se selecionado Q encerra o jogo                                         **/
+            } else if(tecla == 'Q' || tecla == 'q'){                            /** Se selecionado Q encerra o jogo                                         **/
 
-                endGame(GAME_EXIT);
+                fimDeJogo(GAME_EXIT);
 
             } else {
                 printf("Opção inválida!\n");
@@ -275,7 +275,7 @@ void menuInicial(){
 }
 
 /**
- * @fn iniciarJogo()
+ * @fn carregarJogo()
  * @brief Carrega os dados do arquivo para o jogo.
  * @return void
  */
@@ -380,7 +380,7 @@ void iniciarJogo(){
                     break;
                 case SAIR_1:
                 case SAIR_2:
-                    endGame(GAME_EXIT);
+                    fimDeJogo(GAME_EXIT);
                     break;
             }
 
@@ -395,7 +395,7 @@ void iniciarJogo(){
                 gerarDoce();
 
             if(minhoca.tamanho == TAM_MAX_MINHOCA)                                      /** Se a minhoca chegar ao tamanho maximo, encerra o jogo                   **/
-                endGame(GAME_WIN);
+                fimDeJogo(GAME_WIN);
 
             limparTela();                                                               /** Limpa tela e mostra o tabuleiro                                         **/
             mostrarTabuleiro();
@@ -512,11 +512,11 @@ void movimentar(Posicao pos){
     for(i = 1; i < minhoca.tamanho; i++)                            /** Verifica se a minhoca bateu em si mesma             **/
         if(minhoca.posicao[0].x == minhoca.posicao[i].x &&
            minhoca.posicao[0].y == minhoca.posicao[i].y)
-            endGame(GAME_LOSE_1);
+            fimDeJogo(GAME_LOSE_1);
 
     if( minhoca.posicao[0].x < 0 || minhoca.posicao[0].x > 9 ||    /** Verifica se a minhoca não bateu em nenhuma parede   **/
         minhoca.posicao[0].y < 0 || minhoca.posicao[0].y > 9 )
-        endGame(GAME_LOSE_2);
+        fimDeJogo(GAME_LOSE_2);
 
 }
 
@@ -543,12 +543,12 @@ void setMinhocaTabuleiro(Posicao *posicao, int tamanho){
 }
 
 /**
- * @fn endGame
+ * @fn fimDeJogo
  * @brief Encerra o jogo, mostrando uma mensagem de acordo com o tipo de encerramento e desaloca a memoria
  * @param int option
  * @return void
  */
-void endGame(int option){
+void fimDeJogo(int option){
 
     if(option == GAME_WIN)
         printf( LIGHT_GREEN "%s" WHITE, GAME_WIN_MSG);
